@@ -32,7 +32,7 @@ module.exports.signup = function (req, res, callback) {
     var errors = req.validationErrors();
 
     if (errors) {
-        res.status(422).json(errors)
+        res.status(422).json(errors);
     } else {
 
         bcrypt.genSalt(10, function (err, salt) {
@@ -50,18 +50,37 @@ module.exports.signup = function (req, res, callback) {
 
 }
 //**********************************************************************
-module.exports.getUserById = function (id, callback) {
+//module.exports.getUserById = function (id, callback) {
+//    User.findById(id, callback);
+//}
+//
+//module.exports.getUserByUsername = function (username, callback) {
+//    var query = {
+//        username: username
+//    };
+//    User.findOne(query, callback);
+//}
+//
+//module.exports.comparePassword = function (candidatePassword, hash, callback) {
+//
+//    bcrypt.compare(candidatePassword, hash, function (err, isMatch) {
+//        callback(null, isMatch);
+//    });
+//}
+
+// custom login function **************************************
+var getUserById = function (id, callback) {
     User.findById(id, callback);
 }
 
-module.exports.getUserByUsername = function (username, callback) {
+var getUserByUsername = function (username, callback) {
     var query = {
         username: username
     };
     User.findOne(query, callback);
 }
 
-module.exports.comparePassword = function (candidatePassword, hash, callback) {
+var comparePassword = function (candidatePassword, hash, callback) {
 
     bcrypt.compare(candidatePassword, hash, function (err, isMatch) {
         callback(null, isMatch);
@@ -69,11 +88,66 @@ module.exports.comparePassword = function (candidatePassword, hash, callback) {
 }
 
 
-module.exports.logout = function (req, res){
-   req.logout();
-   res.json('logged out');
+
+
+module.exports.login = function (req, res, next) {
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.status(500).json('No user');
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+            return res.status(200).json(req.body.username);
+        });
+    })(req, res, next);
 }
 
+
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+   getUserById(id, function (err, user) {
+        done(err, user);
+    });
+})
+
+passport.use(new LocalStrategy(function (username, password, done) {
+  getUserByUsername(username, function (err, user) {
+        if (err) throw err;
+        if (!user) {
+            return done(null, false, {alert:'wrong username'});
+        }
+        comparePassword(password, user.password, function (err, isMatch) {
+            if (err) return done(err);
+            if (isMatch) {
+                return done(null, user);
+            } else {
+                return done(null, false, {alert:'wrong password'});
+            }
+        });
+    });
+}));
+//*************************************************************
+module.exports.logout = function (req, res) {
+    req.logout();
+    res.json('logged out');
+}
+
+module.exports.isAuthenticated = function(req, res, next)
+{
+    if (req.isAthenticated()) {
+        return next();
+    }
+    res.status(401).json('login please');
+}
 // To change Passport Strategy
 //    passport.use(new LocalStrategy({
 //            usernameField: 'email',

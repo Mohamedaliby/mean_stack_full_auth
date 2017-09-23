@@ -63,7 +63,7 @@ angular.module('app.controllers', [])
         $log.info("loginCtrl working");
 
         $scope.login = function () {
-
+       if($scope.user) {        
             $http.post('users/login', $scope.user).then(function (response, status) {
                 console.log(response);
                 if (response.status === 200) {
@@ -73,12 +73,8 @@ angular.module('app.controllers', [])
             }).catch(function (error) {
                 console.log(error);
                 $scope.errors = 'Wrong username or password';
-                if (error.status === 400) {
-                    $scope.errors = null;
-                }
-
             })
-        }
+         }}
 
 
     }])
