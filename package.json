@@ -5,6 +5,10 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "scripts"{
+  "start":"npm start",
+  "deploy":"gcloud preview app deploy"
+  },
   "dependencies": {
     "2checkout-node": "0.0.1",
     "angular": "^1.6.6",
@@ -30,6 +34,7 @@
     "multer": "^1.3.0",
     "passport": "*",
     "passport-http": "*",
+    "passport-jwt": "^3.0.0",
     "passport-local": "*",
     "passport-local-mongoose": "^4.2.1",
     "satellizer": "^0.15.5",

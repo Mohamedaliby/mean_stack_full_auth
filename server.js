@@ -15,6 +15,7 @@ var config = require('./config/config');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var question = require('./routes/questionRoute');
 
 var app = express();
 
@@ -94,6 +95,7 @@ app.use(function (req, res, next) {
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/questions', question);
 
 
 

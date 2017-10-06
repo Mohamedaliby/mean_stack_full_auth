@@ -30,8 +30,16 @@ module.exports.signup = function (req, res, callback) {
     req.check('password2', 'passwords do not match').equals(req.body.password);
     //check error
     var errors = req.validationErrors();
-
-    if (errors) {
+    
+    getUserByUsername(username, function (err, user) {
+        if (err) throw err;
+        if (user) {
+            errors =[{msg:'user already exist'}];
+            res.status(409).json(errors);
+            console.log('already');
+        }
+        
+        else if (errors) {
         res.status(422).json(errors);
     } else {
 
@@ -41,10 +49,15 @@ module.exports.signup = function (req, res, callback) {
                 var user = new User(req.body);
                 user.save(callback);
                 res.json(req.body);
+
             });
         });
 
     }
+    });
+
+    
+  
 
 
 
@@ -74,9 +87,9 @@ var getUserById = function (id, callback) {
 }
 
 var getUserByUsername = function (username, callback) {
-    var query = {
-        username: username
-    };
+//    var query = { username: username };
+    
+ var query = {$or: [{username: username}, {email: username}]};
     User.findOne(query, callback);
 }
 
@@ -86,6 +99,8 @@ var comparePassword = function (candidatePassword, hash, callback) {
         callback(null, isMatch);
     });
 }
+
+
 
 
 
@@ -102,7 +117,10 @@ module.exports.login = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            return res.status(200).json(req.body.username);
+            return res.status(200).json({name:user.name,
+                                         username:user.username,
+                                         email:user.email,
+                                        id:user._id});
         });
     })(req, res, next);
 }
@@ -114,23 +132,27 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-   getUserById(id, function (err, user) {
+    getUserById(id, function (err, user) {
         done(err, user);
     });
 })
 
 passport.use(new LocalStrategy(function (username, password, done) {
-  getUserByUsername(username, function (err, user) {
+    getUserByUsername(username, function (err, user) {
         if (err) throw err;
         if (!user) {
-            return done(null, false, {alert:'wrong username'});
+            return done(null, false, {
+                alert: 'wrong username'
+            });
         }
         comparePassword(password, user.password, function (err, isMatch) {
             if (err) return done(err);
             if (isMatch) {
                 return done(null, user);
             } else {
-                return done(null, false, {alert:'wrong password'});
+                return done(null, false, {
+                    alert: 'wrong password'
+                });
             }
         });
     });
@@ -141,8 +163,7 @@ module.exports.logout = function (req, res) {
     res.json('logged out');
 }
 
-module.exports.isAuthenticated = function(req, res, next)
-{
+module.exports.requireAuth = function (req, res, next) {
     if (req.isAthenticated()) {
         return next();
     }

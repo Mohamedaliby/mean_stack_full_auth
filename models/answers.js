@@ -1,16 +1,15 @@
 var mongoose = require('mongoose');
 
-
-module.exports = mongoose.model('Question', {
+module.exports =  mongoose.model('Aswers', {
     user: String,
     userId: String,
     userImage: String, //not important now
+    question:{type:Scema.Types.ObjectId, ref:'Question'},
     content: String,
-    pageNumber: Number,
     date: {
         type: Date,
         default: Date.now
     },
-    answers: [],
-    answerCount: Number
+    ups:Number,
+    downs:Number
 });

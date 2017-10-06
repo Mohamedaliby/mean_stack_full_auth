@@ -1,6 +1,55 @@
 <div class="container">
+    <p class="navbar-btn navbar-right"><a ng-click="logout()" class="btn btn-danger">Log out</a></p>
     <h1>Welcome to home</h1>
+    <div class="col-md-4 center">
+    <form ng-submit="ask()" style="display: block;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-4">
+ 
+                        <input ng-model="pageNumber" type="text" name="num" placeholder="رقم الصفحة" class="form-control">
+                        
+                    </div>
+                    <div class="col-xs-4">
+                        <select class="form-control">
+                             <option value="">اختر السنة</option>
+                             <option value="7">أولى اعدادي</option>
+                             <option value="8">ثانية اعدادي</option>
+                             <option value="9">ثالثة اعدادي</option>
+                             <option value="10">أولى ثاناوي</option>
+                             <option value="11">ثانية ثاناوي</option>
+                             <option value="12">ثالثة ثاناوي</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-4">
+<!--
+                        <select class="form-control">
+                             <option value="">اختر المادة</option>
+                             <option value="math">رياضيات</option>
+                             <option value="english">انجليزي</option>
+                        </select>
+-->
+                        <select class="form-control" ng-model="subject" ng-options="x for x in subjects">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <textarea rows="3" ng-model="content" placeholder="Ask your question" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <input type="submit" class="btn navbar-right">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </form>
+    </div>
+
 </div>
-
-    <p class="navbar-btn"><a ng-click="logout()" class="btn btn-danger">Log out</a></p>
-

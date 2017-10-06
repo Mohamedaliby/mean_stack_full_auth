@@ -95,6 +95,31 @@ angular.module('app.controllers', [])
                 $scope.errors = error.data;
             })
         }
+        
+        
+        
+        
+         $scope.subjects = ["English","math","اختر المادة"];
+          $scope.ask = function(){
+            
+               var question = {
+//                    user: $scope.user.username || $scope.user.email,
+//                    userId: $scope.user._id,
+//                    userImage: $scope.user.image,
+                    content: $scope.content,
+                   subject: $scope.subject
+               }
+               
+               $http.post('/questions/ask', question).then(function (response, status) {
+                console.log(response);
+                $scope.question = response;
+            }).catch(function (error) {
+                console.log(error);
+            })
+                   
+        
+            
+        };
 
 
     }]);
