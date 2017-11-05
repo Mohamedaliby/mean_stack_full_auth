@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 module.exports =  mongoose.model('Aswers', {
     user: String,
     userId: String,
     userImage: String, //not important now
-    question:{type:Scema.Types.ObjectId, ref:'Question'},
+    question:{type: Schema.Types.ObjectId, ref:'Question'},
     content: String,
     date: {
         type: Date,

@@ -14,3 +14,22 @@ module.exports.ask = function (req, res) {
     }
   });
 };
+
+
+module.exports.ejaba = function(req, res){
+	var questionId = req.body.questionId;
+  var answer = new Answer(req.body);
+Question.findById(questionId, function(err, question){
+  question.answers.push(answer);
+  question.save(function (err) {
+    if (err) {
+      return res.status(422).json({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      console.log(req.body);
+      res.json(question.answers);
+    }
+  });
+});
+};
