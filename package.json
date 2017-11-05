@@ -2,19 +2,13 @@
   "name": "mean-stack-website",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
-  "scripts"{
-  "start":"npm start",
-  "deploy":"gcloud preview app deploy"
-  },
   "dependencies": {
     "2checkout-node": "0.0.1",
     "angular": "^1.6.6",
     "angular-animate": "^1.6.6",
     "angular-passport": "^1.0.6",
     "angularjs-toaster": "^2.2.0",
+    "angular-ui-router": "^0.3.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "~1.17.1",
     "connect-flash": "^0.1.1",
